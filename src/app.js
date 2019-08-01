@@ -4,6 +4,10 @@ const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
+const usersRouter = require('./users/users-router')
+const tasksRouter = require('./tasks/tasks-router')
+const projectsRouter = require('./projects/projects-router')
+const authRouter = require('./auth/auth-router')
 
 const app = express()
 
@@ -18,6 +22,11 @@ app.use(helmet())
 app.get('/', (req, res) => {
   res.send('Hello, world!')
  })
+
+app.use('/api/projects', projectsRouter)
+app.use('/api/tasks', tasksRouter)
+app.use('/api/auth', authRouter)
+app.use('/api/users', usersRouter)
 
  app.use(function errorHandler(error, req, res, next) {
     let response
