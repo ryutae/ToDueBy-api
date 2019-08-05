@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs')
+const config = require('../config')
+
 const UsersService = {
     userWithEmailAlreadyExists(db, email) {
         return db
