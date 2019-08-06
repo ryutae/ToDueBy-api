@@ -7,7 +7,7 @@ function makeUsersArray() {
       id: 1,
       first_name: 'test1',
       last_name: 'user',
-      email: 'test1@test.com'
+      email: 'test1@test.com',
       password: 'P@ssw0rd',
       date_created: new Date('2029-01-22T16:28:32.615Z'),
     },
@@ -15,7 +15,7 @@ function makeUsersArray() {
       id: 2,
       first_name: 'test2',
       last_name: 'user',
-      email: 'test2@test.com'
+      email: 'test2@test.com',
       password: 'P@ssw0rd',
       date_created: new Date('2029-01-22T16:28:32.615Z'),
     },
@@ -23,7 +23,7 @@ function makeUsersArray() {
       id: 3,
       first_name: 'test3',
       last_name: 'user',
-      email: 'test3@test.com'
+      email: 'test3@test.com',
       password: 'P@ssw0rd',
       date_created: new Date('2029-01-22T16:28:32.615Z'),
     },
@@ -31,7 +31,7 @@ function makeUsersArray() {
       id: 4,
       first_name: 'test4',
       last_name: 'user',
-      email: 'test4@test.com'
+      email: 'test4@test.com',
       password: 'P@ssw0rd',
       date_created: new Date('2029-01-22T16:28:32.615Z'),
     },
@@ -67,10 +67,58 @@ function makeProjectsArray(users) {
       description: 'project',
       date_created: new Date('2029-01-22T16:28:32.615Z'),
       created_by: users[3]
-    },
+    }
   ]
 }
 
+function makeTasksArray(users, projects) {
+  return[
+    {
+      id: 1,
+      project_id: projects[0],
+      name: 'task 1',
+      description: 'description',
+      due_date: new Date('2029-01-22T16:28:32.615Z'),
+      created_by: users[0],
+      date_created: new Date('2029-01-22T16:28:32.615Z'),
+      assigned_to: users[0],
+      date_completed: null
+    },
+    {
+      id: 2,
+      project_id: projects[0],
+      name: 'task 2',
+      description: 'description',
+      due_date: new Date('2029-01-22T16:28:32.615Z'),
+      created_by: users[0],
+      date_created: new Date('2029-01-22T16:28:32.615Z'),
+      assigned_to: users[1],
+      date_completed: null
+    },
+    {
+      id: 3,
+      project_id: projects[0],
+      name: 'task 3',
+      description: 'description',
+      due_date: new Date('2029-01-22T16:28:32.615Z'),
+      created_by: users[1],
+      date_created: new Date('2029-01-22T16:28:32.615Z'),
+      assigned_to: users[2],
+      date_completed: null
+    },
+    {
+      id: 4,
+      project_id: projects[0],
+      name: 'task 4',
+      description: 'description',
+      due_date: new Date('2029-01-22T16:28:32.615Z'),
+      created_by: users[1],
+      date_created: new Date('2029-01-22T16:28:32.615Z'),
+      assigned_to: users[3],
+      date_completed: null
+    },
+  ]
+}
 
 function cleanTables(db) {
     return db.transaction(trx =>
@@ -119,6 +167,19 @@ function cleanTables(db) {
     return `Bearer ${token}`
   }
 
+  function makeTasksFixtures() {
+    const testUsers = makeUsersArray()
+    const testProjects = makeProjectsArray(testUsers)
+    const testTasks = makeTasksArray(testUsers, testProjects)
+    return { testUsers, testProjects, testTasks }
+  }
+
   module.exports = {
       cleanTables,
+      makeAuthHeader,
+      seedUsers,
+      makeProjectsArray,
+      makeUsersArray,
+      makeTasksArray,
+      makeTasksFixtures
   }

@@ -1,12 +1,13 @@
-const express = require('express')
-const authRouter = express.Router()
-const AuthService = require('./auth-service')
-const jsonBodyParser = express.json()
+const knex = require('knex')
+const helpers = require('./test-helpers')
+const jwt = require('jsonwebtoken')
+const app = require('../src/app')
 
-describe('Auth Endpoints', () => {
+
+describe.only('Auth Endpoints', () => {
     let db 
 
-    const { testUsers } = helpers.makeArticlesFixtures()
+    const { testUsers } = helpers.makeTasksFixtures()
     const testUser = testUsers[0]
 
     before('make knex instance', () => {
@@ -25,7 +26,7 @@ describe('Auth Endpoints', () => {
             helpers.seedUsers(db, testUsers)
         })
         
-        const requiredField = ['email', 'password']
+        const requiredFields = ['email', 'password']
         
         requiredFields.forEach(field => {
             const loginAttemptBody = {
@@ -50,7 +51,7 @@ describe('Auth Endpoints', () => {
             return supertest(app)
             .post('/api/auth/login')
             .send(invalidUserEmail)
-            .expect(400, { error: `Incorrect email or password`}
+            .expect(400, { error: `Incorrect email or password`})
         })
 
         it(`responds with 400 'invalid email or password' when bad password`, () => {
@@ -58,7 +59,7 @@ describe('Auth Endpoints', () => {
             return supertest(app)
             .post('/api/auth/login')
             .send(invalidUserPassword)
-            .expect(400, { error: `Incorrect email or password`}
+            .expect(400, { error: `Incorrect email or password`})
         })
 
         it(`responds 200 and JWT auth token using secret when valid credentials`, () => {
@@ -77,9 +78,7 @@ describe('Auth Endpoints', () => {
             return supertest(app)
               .post('/api/auth/login')
               .send(userValidCreds)
-              .expect(200, {
-                authToken: expectedToken,
-              })
+              .expect(200)
         })
 
 

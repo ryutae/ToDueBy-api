@@ -6,9 +6,11 @@ const jsonBodyParser = express.json()
 authRouter 
     .route('/login')
     .post(jsonBodyParser, (req, res, next) => {
+        console.log(req.body)
         const { email, password } = req.body
          //make sure all fields are submitted
         const loginUser = { email, password }
+        console.log(loginUser)
         for (const [key, value] of Object.entries(loginUser))
             if (value == null)
                 return res.status(400).json({
@@ -16,9 +18,9 @@ authRouter
                 })
                 
         //validate email
-        AuthService.getUserWithEmail('db', loginUser.email)
+        AuthService.getUserWithEmail(req.app.get('db'), loginUser.email)
         .then(dbUser => {
-            if (!dbuser) {
+            if (!dbUser) {
                 return res.status(400).json({
                     error: `Incorrect email or password`
                 })
