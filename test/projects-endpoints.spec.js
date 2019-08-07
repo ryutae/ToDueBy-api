@@ -70,4 +70,16 @@ describe.only('Projects Endpoints', function() {
           })
         })
     })
+
+    describe('GET /api/projects', () => {
+        beforeEach('insert users', () => {
+            helpers.seedUsers(db, testUsers)
+        })
+        it(`responds with 200 with valid authorization`, () => {
+            return supertest(app)
+            .get('/api/projects')
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+            .expect(200)
+        })
+    })
 })

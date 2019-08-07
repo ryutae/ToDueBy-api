@@ -9,12 +9,9 @@ const ProjectsService = {
         .first()
     },
     getProjectsForUser(knex, user_id) {
-        return knex
-        .select('*')
-        .from('projects')
-        .innerjoin('userprojectref', 'projects.id', 'userprojectref.project_id')
-        .innerjoin('users', 'users.id', 'userprojectref.user_id')
-        .where('users.id', user_id)
+        return knex('projects').select('*')
+        .innerJoin('userprojectref', 'projects.id', 'userprojectref.project_id')
+        .where('userprojectref.user_id', '=', user_id)
     },
     insertProject(knex, newProject) {
         return knex

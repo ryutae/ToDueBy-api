@@ -15,7 +15,6 @@ projectsRouter
         return res.status(400).json({error: `Missing 'name' field in request body`})
     }
     newProject.created_by = req.user.id
-    console.log(newProject)
     ProjectsService.insertProject(req.app.get('db'), newProject)
     .then(project => {
         res.status(201)
@@ -24,5 +23,14 @@ projectsRouter
     })
     .catch(next)
 })
+.get(requireAuth, (req, res, next) => {
+    const user_id = req.user.id
+    ProjectsService.getProjectsForUser(req.app.get('db'), user_id)
+    .then(projects => {
+        return res.status(200).json(projects)
+    })
+    .catch(next)
+})
+
 
 module.exports = projectsRouter
