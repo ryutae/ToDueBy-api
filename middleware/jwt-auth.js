@@ -1,4 +1,4 @@
-const AuthService = require('../auth/auth-service')
+const AuthService = require('../src/auth/auth-service')
 
 function requireAuth(req, res, next) {
   const authToken = req.get('Authorization') || ''
@@ -12,7 +12,7 @@ function requireAuth(req, res, next) {
 
   try {
     const payload = AuthService.verifyJwt(bearerToken)
-
+    console.log(payload)
     AuthService.getUserWithEmail(
       req.app.get('db'),
       payload.sub,
