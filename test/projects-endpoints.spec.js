@@ -71,15 +71,46 @@ describe.only('Projects Endpoints', function() {
         })
     })
 
-    describe('GET /api/projects', () => {
-        beforeEach('insert users', () => {
-            helpers.seedUsers(db, testUsers)
-        })
-        it(`responds with 200 with valid authorization`, () => {
+    // describe('GET /api/projects', () => {
+    //     beforeEach('insert users', () => {
+    //         helpers.seedUsers(db, testUsers)
+    //     })
+    //     it(`responds with 200 with valid authorization`, () => {
+    //         return supertest(app)
+    //         .get('/api/projects')
+    //         .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+    //         .expect(200)
+    //     })
+    // })
+
+    describe(`GET /api/projects`, () => {
+        beforeEach('insert projects', () =>
+            helpers.seedProjectsTables(
+              db,
+              testUsers,
+              testProjects,
+              testTasks,
+            )
+          )
+        context(`Given no projects`, () => {
+          it(`responds with 200 and an empty list`, () => {
             return supertest(app)
-            .get('/api/projects')
-            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-            .expect(200)
+              .get('/api/projects')
+              .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+              .expect(200, [])
+          })
+        })
+    
+        context('Given there are projects in the database', () => {
+          
+    
+          it('responds with 200 and all of the projects', () => {
+        
+            return supertest(app)
+              .get('/api/projects')
+              .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+              .expect(200)
+          })
         })
     })
 
@@ -118,4 +149,40 @@ describe.only('Projects Endpoints', function() {
           })
         })
     })
+
+    describe(`GET /api/projects/:project_id/tasks`, () => {
+        context(`Given no projects`, () => {
+          beforeEach(() =>
+            helpers.seedUsers(db, testUsers)
+          )
+    
+          it(`responds with 404`, () => {
+            const projectId = 123456
+            return supertest(app)
+              .get(`/api/projects/${projectId}/tasks`)
+              .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+              .expect(404, { error: `Project doesn't exist` })
+          })
+        })
+    
+        context('Given there are tasks for project in the database', () => {
+          beforeEach('insert projects', () =>
+            helpers.seedProjectsTables(
+              db,
+              testUsers,
+              testProjects,
+              testTasks,
+            )
+          )
+    
+          it('responds with 200 and the specified tasks', () => {
+            const projectId = 1
+    
+            return supertest(app)
+              .get(`/api/projects/${projectId}/tasks`)
+              .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+              .expect(200)
+          })
+        })
+      })
 })

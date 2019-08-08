@@ -41,7 +41,18 @@ projectsRouter
         .then(project => {
             res.status(200).json(project)
         })
+    })
 
+projectsRouter
+    .route('/:project_id/tasks/')
+    .all(requireAuth)
+    .all(checkProjectExists)
+    .get((req, res, next) => {
+        ProjectsService.getTasksForProject(req.app.get('db'), req.params.project_id)
+        .then(tasks => {
+            res.status(200).json(tasks)
+        })
+        .catch(next)
     })
 
 /* async/await syntax for promises */

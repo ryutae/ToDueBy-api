@@ -31,6 +31,12 @@ const ProjectsService = {
         .update(updatedProject)
         .where({ id })
         .returning('*')
+    },
+    getTasksForProject(knex, project_id) {
+        return knex
+        .select('*')
+        .from('tasks')
+        .where({project_id})
     }
 
 }
