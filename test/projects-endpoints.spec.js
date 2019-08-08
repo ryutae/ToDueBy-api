@@ -14,7 +14,7 @@ describe.only('Projects Endpoints', function() {
     app.set('db', db)
     })
 
-    const { testUsers, testProjects } = helpers.makeTasksFixtures()
+    const { testUsers, testProjects, testTasks } = helpers.makeTasksFixtures()
 
     after('disconnect from db', () => db.destroy())
 
@@ -80,6 +80,42 @@ describe.only('Projects Endpoints', function() {
             .get('/api/projects')
             .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
             .expect(200)
+        })
+    })
+
+    describe(`GET /api/projects/:project_id`, () => {
+        context(`Given no projects`, () => {
+          beforeEach(() =>
+            helpers.seedUsers(db, testUsers)
+          )
+    
+          it(`responds with 404`, () => {
+            const projectId = 123456
+            return supertest(app)
+              .get(`/api/projects/${projectId}`)
+              .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+              .expect(404, { error: `Project doesn't exist` })
+          })
+        })
+    
+        context('Given there are projects in the database', () => {
+          beforeEach('insert projects', () =>
+            helpers.seedProjectsTables(
+              db,
+              testUsers,
+              testProjects,
+              testTasks,
+            )
+          )
+    
+          it('responds with 200 and the specified project', () => {
+            const projectId = 2
+    
+            return supertest(app)
+              .get(`/api/projects/${projectId}`)
+              .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+              .expect(200)
+          })
         })
     })
 })

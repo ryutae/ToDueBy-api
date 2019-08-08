@@ -45,28 +45,28 @@ function makeProjectsArray(users) {
       name: 'Project 1',
       description: 'project',
       date_created: new Date('2029-01-22T16:28:32.615Z'),
-      created_by: users[0]
+      created_by: users[0].id
     },
     {
       id: 2,
       name: 'Project 2',
       description: 'project',
       date_created: new Date('2029-01-22T16:28:32.615Z'),
-      created_by: users[1]
+      created_by: users[1].id
     },
     {
       id: 3,
       name: 'Project 3',
       description: 'project',
       date_created: new Date('2029-01-22T16:28:32.615Z'),
-      created_by: users[2]
+      created_by: users[2].id
     },
     {
       id: 4,
       name: 'Project 4',
       description: 'project',
       date_created: new Date('2029-01-22T16:28:32.615Z'),
-      created_by: users[3]
+      created_by: users[3].id
     }
   ]
 }
@@ -75,46 +75,46 @@ function makeTasksArray(users, projects) {
   return[
     {
       id: 1,
-      project_id: projects[0],
+      project_id: projects[0].id,
       name: 'task 1',
       description: 'description',
       due_date: new Date('2029-01-22T16:28:32.615Z'),
-      created_by: users[0],
+      created_by: users[0].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
-      assigned_to: users[0],
+      assigned_to: users[0].id,
       date_completed: null
     },
     {
       id: 2,
-      project_id: projects[0],
+      project_id: projects[0].id,
       name: 'task 2',
       description: 'description',
       due_date: new Date('2029-01-22T16:28:32.615Z'),
-      created_by: users[0],
+      created_by: users[0].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
-      assigned_to: users[1],
+      assigned_to: users[1].id,
       date_completed: null
     },
     {
       id: 3,
-      project_id: projects[0],
+      project_id: projects[0].id,
       name: 'task 3',
       description: 'description',
       due_date: new Date('2029-01-22T16:28:32.615Z'),
-      created_by: users[1],
+      created_by: users[1].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
-      assigned_to: users[2],
+      assigned_to: users[2].id,
       date_completed: null
     },
     {
       id: 4,
-      project_id: projects[0],
+      project_id: projects[0].id,
       name: 'task 4',
       description: 'description',
       due_date: new Date('2029-01-22T16:28:32.615Z'),
-      created_by: users[1],
+      created_by: users[1].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
-      assigned_to: users[3],
+      assigned_to: users[3].id,
       date_completed: null
     },
   ]
@@ -159,6 +159,27 @@ function cleanTables(db) {
       )
   }
 
+  function seedProjectsTables(db, users, projects, tasks=[]) {
+    // use a transaction to group the queries and auto rollback on any failure
+    return db.transaction(async trx => {
+      await seedUsers(trx, users)
+      await trx.into('projects').insert(projects)
+      // update the auto sequence to match the forced id values
+      await trx.raw(
+        `SELECT setval('projects_id_seq', ?)`,
+        [projects[projects.length - 1].id],
+      )
+      // only insert tasks if there are some, also update the sequence counter
+      if (tasks.length) {
+        await trx.into('tasks').insert(tasks)
+        await trx.raw(
+          `SELECT setval('tasks_id_seq', ?)`,
+          [tasks[tasks.length - 1].id],
+        )
+      }
+    })
+  }
+
   function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
     const token = jwt.sign({ user_id: user.id }, secret, {
       subject: user.email,
@@ -181,5 +202,6 @@ function cleanTables(db) {
       makeProjectsArray,
       makeUsersArray,
       makeTasksArray,
-      makeTasksFixtures
+      makeTasksFixtures,
+      seedProjectsTables
   }

@@ -32,5 +32,36 @@ projectsRouter
     .catch(next)
 })
 
+projectsRouter
+    .route('/:project_id')
+    .all(requireAuth)
+    .all(checkProjectExists)
+    .get((req, res) => {
+        ProjectsService.getProjectById(req.app.get('db'), req.params.project_id)
+        .then(project => {
+            res.status(200).json(project)
+        })
+
+    })
+
+/* async/await syntax for promises */
+async function checkProjectExists(req, res, next) {
+    try {
+      const project = await ProjectsService.getProjectById(
+        req.app.get('db'),
+        req.params.project_id
+      )
+  
+      if (!project)
+        return res.status(404).json({
+          error: `Project doesn't exist`
+        })
+  
+      res.project = project
+      next()
+    } catch (error) {
+      next(error)
+    }
+}
 
 module.exports = projectsRouter
