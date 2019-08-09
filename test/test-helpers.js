@@ -72,7 +72,7 @@ function makeProjectsArray(users) {
 }
 
 function makeTasksArray(users, projects) {
-  return[
+  return [
     {
       id: 1,
       project_id: projects[0].id,
@@ -82,7 +82,8 @@ function makeTasksArray(users, projects) {
       created_by: users[0].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
       assigned_to: users[0].id,
-      date_completed: null
+      date_completed: null,
+      completed_by: null
     },
     {
       id: 2,
@@ -93,7 +94,8 @@ function makeTasksArray(users, projects) {
       created_by: users[0].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
       assigned_to: users[1].id,
-      date_completed: null
+      date_completed: null,
+      completed_by: null
     },
     {
       id: 3,
@@ -104,7 +106,8 @@ function makeTasksArray(users, projects) {
       created_by: users[1].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
       assigned_to: users[2].id,
-      date_completed: null
+      date_completed: null,
+      completed_by: null
     },
     {
       id: 4,
@@ -115,7 +118,8 @@ function makeTasksArray(users, projects) {
       created_by: users[1].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
       assigned_to: users[3].id,
-      date_completed: null
+      date_completed: null,
+      completed_by: null
     },
   ]
 }

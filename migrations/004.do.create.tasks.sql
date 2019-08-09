@@ -7,5 +7,6 @@ CREATE TABLE tasks (
     created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
     date_created TIMESTAMP DEFAULT now() NOT NULL,
     assigned_to INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    date_completed TIMESTAMP DEFAULT NULL
+    date_completed TIMESTAMP DEFAULT NULL,
+    completed_by INTEGER REFERENCES users(id) ON DELETE SET NULL
 );
