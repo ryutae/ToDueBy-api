@@ -24,6 +24,13 @@ const TasksService = {
         .leftJoin('users AS U3', 't.completed_by', 'U3.id')
         .where('t.id', id)
         .first()
+    },
+    insertTask(knex, newTask) {
+        return knex
+        .insert(newTask)
+        .into('tasks')
+        .returning('*')
+        .then(rows => rows[0])
     }
 }
 module.exports = TasksService

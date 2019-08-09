@@ -22,6 +22,48 @@ describe.only('Tasks Endpoints', function() {
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
+  describe('POST /api/tasks', () => {
+    beforeEach('insert tasks', () => 
+      helpers.seedProjectsTables(
+        db, testUsers, testProjects
+      )
+    )
+
+    it(`creates a task, responds with 201 and new task`, () => {
+      const newTask = {
+        project_id: 1,
+        name: 'test', 
+        description: 'test', 
+        due_date: '2019-08-10', 
+        assigned_to: 2
+      }
+
+      return supertest(app)
+      .post('/api/tasks')
+      .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+      .send(newTask)
+      .expect(201)
+    })
+
+    const requiredFields = ['project_id', 'name']
+    requiredFields.forEach(field => {
+      const testUser = testUsers[0]
+      const newTask = {
+        project_id: 1,
+        name: "test task",
+      }
+
+      it(`returns 400 when missing '${field}'`, () => {
+          delete newTask[field]
+
+          return supertest(app)
+          .post('/api/tasks')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send(newTask)
+          .expect(400, {error: `Missing '${field}' in request body`})
+      })
+    })
+  })
 
   describe('GET /api/tasks/:task_id', () => {
     context(`Given no projects`, () => {
