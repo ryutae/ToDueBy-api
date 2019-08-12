@@ -55,6 +55,33 @@ projectsRouter
         .catch(next)
     })
 
+projectsRouter
+    .route('/project/all')
+    .all(requireAuth)
+    .get((req, res, next) => {
+        ProjectsService.getAllProjects(req.app.get('db'))
+        .then(projects => {
+            res.status(200).json(projects)
+        })
+        .catch(next)
+    })
+
+projectsRouter
+    .route('/join/:project_id')
+    .all(requireAuth)
+    .all(checkProjectExists)
+    .all(checkUserInProject)
+    .post((req, res, next) => {
+        const { project_id } = req.params
+        const user_id = req.user.id
+        //insert record into userprojectref
+        ProjectsService.joinProject(req.app.get('db'), user_id, project_id)
+        .then(project => {
+            res.status(201).json(project)
+        })
+        .catch(next)
+    })
+
 /* async/await syntax for promises */
 async function checkProjectExists(req, res, next) {
     try {
@@ -74,5 +101,25 @@ async function checkProjectExists(req, res, next) {
       next(error)
     }
 }
+
+async function checkUserInProject(req, res, next) {
+    try {
+      const UserProject = await ProjectsService.getUserProject(
+        req.app.get('db'),
+        req.params.project_id,
+        req.user.id
+      )
+
+      if (UserProject)
+        return res.status(404).json({
+          error: `User is already in group`
+        })
+
+      res.data = UserProject
+      next()
+    } catch (error) {
+      next(error)
+    }
+  }
 
 module.exports = projectsRouter

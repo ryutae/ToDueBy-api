@@ -8,10 +8,22 @@ const ProjectsService = {
         .where('id', id)
         .first()
     },
+    getProjectByName(knex, name) {
+        return knex
+        .select('*')
+        .from('projects')
+        .where({ name })
+        .first()
+    },
     getProjectsForUser(knex, user_id) {
         return knex('projects').select('*')
         .innerJoin('userprojectref', 'projects.id', 'userprojectref.project_id')
         .where('userprojectref.user_id', '=', user_id)
+    },
+    getAllProjects(knex) {
+        return knex
+        .select()
+        .table('projects')
     },
     insertProject(knex, newProject) {
         return knex
@@ -37,8 +49,28 @@ const ProjectsService = {
         .select('*')
         .from('tasks')
         .where({project_id})
+    },
+    getUserProject(knex, project_id, user_id) {
+        return knex
+        .select('*')
+        .from('userprojectref')
+        .where({
+          user_id : user_id,
+          project_id: project_id
+        })
+        .first()
+      },
+    joinProject(knex, user_id, project_id) {
+        return knex
+        .insert({
+            user_id: user_id,
+            project_id: project_id
+        })
+        .into('userprojectref')
+        .returning('*')
+        .then(rows => rows[0])
     }
-
+ 
 }
 
 module.exports = ProjectsService
