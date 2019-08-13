@@ -19,6 +19,7 @@ const ProjectsService = {
         return knex('projects').select('*')
         .innerJoin('userprojectref', 'projects.id', 'userprojectref.project_id')
         .where('userprojectref.user_id', '=', user_id)
+        .orderBy('projects.id')
     },
     getAllProjects(knex) {
         return knex
@@ -42,7 +43,6 @@ const ProjectsService = {
         return knex('projects')
         .update(updatedProject)
         .where({ id })
-        .returning('*')
     },
     getTasksForProject(knex, project_id) {
         return knex

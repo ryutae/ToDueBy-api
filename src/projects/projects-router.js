@@ -42,6 +42,24 @@ projectsRouter
             res.status(200).json(project)
         })
     })
+    .patch(jsonBodyParser, (req, res, next) => {
+        const { name, description } = req.body
+        const projectToUpdate = { name, description }
+        const numberOfValues = Object.values(projectToUpdate).filter(Boolean).length
+        if (numberOfValues === 0)
+            return res.status(400).json({
+                error: `Request body must contain 'name'`
+            })
+        ProjectsService.updateProject(
+            req.app.get('db'),
+            req.params.project_id,
+            projectToUpdate
+        )
+        .then(numRowsAffected => {
+            res.status(204).json(numRowsAffected)
+        })
+        .catch(next)
+    })
 
 projectsRouter
     .route('/:project_id/tasks/')

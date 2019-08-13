@@ -89,13 +89,6 @@ describe.only('Tasks Endpoints', function() {
           )
       })
 
-      it('responds with 404 when task does not exist', () => {
-        return supertest(app)
-        .get('/api/tasks/1234')
-        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-        .expect(404)
-      })
-
       it(`responds with 200 when task exists`, () => {
         return supertest(app)
         .get('/api/tasks/1')

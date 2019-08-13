@@ -3,7 +3,7 @@ const knex = require('knex')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe('Projects Endpoints', function() {
+describe.only('Projects Endpoints', function() {
     let db
 
     before('make knex instance', () => {
@@ -185,4 +185,41 @@ describe('Projects Endpoints', function() {
           })
         })
       })
+
+    describe('PATCH /api/projects/:project_id', () => {
+      context('Given there are tasks for project in the database', () => {
+        beforeEach('insert projects', () =>
+          helpers.seedProjectsTables(
+            db,
+            testUsers,
+            testProjects,
+            testTasks,
+          )
+        )
+
+        it(`responds with 404 when the project does not exist`, () => {
+          const projectToUpdate = {
+            name: 'test',
+            description: 'desc'
+          }
+          return supertest(app)
+          .patch('/api/projects/1234')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send(projectToUpdate)
+          .expect(404)
+        })
+
+        it('responds with 204 when the project exists', () => {
+          const projectToUpdate = {
+            name: 'test',
+            description: 'desc'
+          }
+          return supertest(app)
+          .patch('/api/projects/1')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send(projectToUpdate)
+          .expect(204)
+        })
+      })
+    })
 })
