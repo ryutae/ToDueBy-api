@@ -22,8 +22,10 @@ tasksRouter
     .all(requireAuth)
     .all(checkTaskExists)
     .patch(jsonBodyParser, (req, res, next) => {
+        console.log(req.body)
         const { assignTo } = req.body 
         const { task_id } = req.params
+        console.log(assignTo, task_id)
         TasksService.assignTask(req.app.get('db'), task_id, assignTo)
         .then(() => {
             res.status(204).end()

@@ -49,6 +49,7 @@ const ProjectsService = {
         .select('*')
         .from('tasks')
         .where({project_id})
+        .orderBy('id')
     },
     getUserProject(knex, project_id, user_id) {
         return knex
