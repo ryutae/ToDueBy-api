@@ -73,6 +73,18 @@ projectsRouter
         .catch(next)
     })
 
+    projectsRouter
+    .route('/:project_id/members/')
+    .all(requireAuth)
+    .all(checkProjectExists)
+    .get((req, res, next) => {
+        ProjectsService.getMembersInProject(req.app.get('db'), req.params.project_id)
+        .then(members => {
+            res.status(200).json(members)
+        })
+        .catch(next)
+    })
+
 projectsRouter
     .route('/project/all')
     .all(requireAuth)

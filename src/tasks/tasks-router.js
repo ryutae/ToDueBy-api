@@ -18,6 +18,20 @@ tasksRouter
     })
 
 tasksRouter
+    .route('/:task_id/assign')
+    .all(requireAuth)
+    .all(checkTaskExists)
+    .patch(jsonBodyParser, (req, res, next) => {
+        const { assignTo } = req.body 
+        const { task_id } = req.params
+        TasksService.assignTask(req.app.get('db'), task_id, assignTo)
+        .then(() => {
+            res.status(204).end()
+        })
+        .catch(next)
+    })
+
+tasksRouter
     .route('/')
     .all(requireAuth)
     .post(jsonBodyParser, (req, res, next) => {

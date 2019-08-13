@@ -59,7 +59,7 @@ const ProjectsService = {
           project_id: project_id
         })
         .first()
-      },
+    },
     joinProject(knex, user_id, project_id) {
         return knex
         .insert({
@@ -69,6 +69,13 @@ const ProjectsService = {
         .into('userprojectref')
         .returning('*')
         .then(rows => rows[0])
+    },
+    getMembersInProject(knex, project_id) {
+        return knex
+        .select('up.project_id','u.*')
+        .from('users AS u')
+        .innerJoin('userprojectref AS up', 'u.id', 'up.user_id')
+        .where('up.project_id', project_id)
     }
  
 }
