@@ -60,6 +60,20 @@ tasksRouter
     })
 
 tasksRouter
+    .route('/:task_id/complete')
+    .all(requireAuth)
+    .all(checkTaskExists)
+    .post((req, res, next) => {
+        const { task_id } = req.params
+        const user_id = req.user.id
+        TasksService.completeTask(req.app.get('db'), task_id, user_id)
+        .then(() => {
+            res.status(204).end()
+        })
+        .catch(next)
+    })
+
+tasksRouter
     .route('/')
     .all(requireAuth)
     .post(jsonBodyParser, (req, res, next) => {

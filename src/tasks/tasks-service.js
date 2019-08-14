@@ -43,6 +43,15 @@ const TasksService = {
         .update(updatedTask)
         .where({ id })
         .returning('*')
+    },
+    completeTask(knex, id, user_id) {
+        return knex('tasks')
+        .update({
+            completed_by: user_id,
+            date_completed: new Date()
+        })
+        .where({ id })
+        .returning('*')
     }
 }
 module.exports = TasksService
