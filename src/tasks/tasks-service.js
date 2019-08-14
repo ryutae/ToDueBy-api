@@ -37,6 +37,12 @@ const TasksService = {
         .update({assigned_to: user_id})
         .where({ id })
         .returning('*')
+    },
+    updateTask(knex, id, updatedTask) {
+        return knex('tasks')
+        .update(updatedTask)
+        .where({ id })
+        .returning('*')
     }
 }
 module.exports = TasksService

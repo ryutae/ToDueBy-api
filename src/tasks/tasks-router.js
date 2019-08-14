@@ -16,6 +16,32 @@ tasksRouter
         })
         .catch(next)
     })
+    .patch(jsonBodyParser, (req, res, next) => {
+        const { name, description, due_date, assigned_to } = req.body
+        const updatedTask = { name}
+        for (const [key, value] of Object.entries(updatedTask)) 
+            if (value == null) 
+                return res.status(400).json({
+                    error: `Missing '${key}' in request body`
+                })
+        updatedTask.description = description
+        if (due_date == '') {
+            updatedTask.due_date = null
+        } else {
+            updatedTask.due_date = due_date
+        }
+        if (assigned_to == '') {
+            updatedTask.assigned_to = null
+        } else{
+            updatedTask.assigned_to = assigned_to
+        }
+        console.log(updatedTask)
+        TasksService.updateTask(req.app.get('db'), req.params.task_id, updatedTask)
+        .then(() => {
+            res.status(204).end()
+        })
+        .catch(next)
+    })
 
 tasksRouter
     .route('/:task_id/assign')
