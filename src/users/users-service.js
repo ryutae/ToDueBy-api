@@ -73,6 +73,15 @@ const UsersService = {
             created_by: user_id
         })
         .orderBy('date_created', 'desc')
+    },
+    getMyCompletedTasks(knex, user_id) {
+        return knex
+        .select('*')
+        .from('tasks')
+        .where({
+            completed_by: user_id
+        })
+        .orderBy('date_completed', 'desc')
     }
 
 }
