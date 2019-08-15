@@ -54,6 +54,16 @@ const UsersService = {
             email: xss(user.emails),
             date_created: new Date(user.date_created)
         }
+    },
+    getMyOpenTasks(knex, user_id) {
+        return knex
+        .select('*')
+        .from('tasks')
+        .where({
+            assigned_to: user_id
+        })
+        .whereNull('completed_by')
+        .orderBy('due_date')
     }
 
 }
