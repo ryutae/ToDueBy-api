@@ -64,6 +64,15 @@ const UsersService = {
         })
         .whereNull('completed_by')
         .orderBy('due_date')
+    },
+    getMyCreatedTasks(knex, user_id) {
+        return knex
+        .select('*')
+        .from('tasks')
+        .where({
+            created_by: user_id
+        })
+        .orderBy('date_created', 'desc')
     }
 
 }
