@@ -86,10 +86,11 @@ projectsRouter
     })
 
 projectsRouter
-    .route('/project/all')
+    .route('/project/join')
     .all(requireAuth)
     .get((req, res, next) => {
-        ProjectsService.getAllProjects(req.app.get('db'))
+        const user_id = req.user.id
+        ProjectsService.getJoinProjects(req.app.get('db'), user_id)
         .then(projects => {
             res.status(200).json(projects)
         })

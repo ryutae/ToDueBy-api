@@ -26,6 +26,20 @@ const ProjectsService = {
         .select()
         .table('projects')
     },
+    getJoinProjects(knex, user_id) {
+        return knex
+        .select('p.*')
+        .from('projects AS p')
+        .leftJoin('userprojectref AS up', function() {
+            this.on('p.id', '=', 'up.project_id').andOn('up.user_id', '=', user_id)
+        })
+        .whereNull('up.user_id')
+        // select * from projects p
+        // left join userprojectref up on p.id = up.project_id and up.user_id = user_id
+        // where up.user_id is null
+
+
+    },
     insertProject(knex, newProject) {
         return knex
         .insert(newProject)
