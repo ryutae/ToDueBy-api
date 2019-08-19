@@ -53,7 +53,6 @@ usersRouter
     .route('/myopentasks')
     .get(requireAuth, (req, res, next) => {
         const user_id = req.user.id
-        console.log(`user_id: ${user_id}`)
         UsersService.getMyOpenTasks(req.app.get('db'), user_id)
         .then(tasks => {
             res.status(200).json(tasks)
@@ -66,7 +65,6 @@ usersRouter
     .route('/mycreatedtasks')
     .get(requireAuth, (req, res, next) => {
         const user_id = req.user.id
-        console.log(`user_id: ${user_id}`)
         UsersService.getMyCreatedTasks(req.app.get('db'), user_id)
         .then(tasks => {
             res.status(200).json(tasks)
@@ -78,7 +76,6 @@ usersRouter
     .route('/mycompletedtasks')
     .get(requireAuth, (req, res, next) => {
         const user_id = req.user.id
-        console.log(`user_id: ${user_id}`)
         UsersService.getMyCompletedTasks(req.app.get('db'), user_id)
         .then(tasks => {
             res.status(200).json(tasks)

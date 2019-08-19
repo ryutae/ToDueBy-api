@@ -35,7 +35,6 @@ tasksRouter
         } else{
             updatedTask.assigned_to = assigned_to
         }
-        console.log(updatedTask)
         TasksService.updateTask(req.app.get('db'), req.params.task_id, updatedTask)
         .then(() => {
             res.status(204).end()
@@ -48,10 +47,8 @@ tasksRouter
     .all(requireAuth)
     .all(checkTaskExists)
     .patch(jsonBodyParser, (req, res, next) => {
-        console.log(req.body)
         const { assignTo } = req.body 
         const { task_id } = req.params
-        console.log(assignTo, task_id)
         TasksService.assignTask(req.app.get('db'), task_id, assignTo)
         .then(() => {
             res.status(204).end()
@@ -96,7 +93,6 @@ tasksRouter
         } else{
             newTask.assigned_to = assigned_to
         }
-        console.log(newTask)
         TasksService.insertTask(req.app.get('db'), newTask)
         .then(task => {
             res.status(201)
