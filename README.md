@@ -1,27 +1,42 @@
-# Express Boilerplate!
+# ToDueBy API
+[Live App](https://ryutae-todueby.now.sh)
 
-This is a boilerplate project used for starting new projects
+## Summary
 
-## Set up
+ToDueBy is an app that allows you create and join project with your co-workers to create and assign tasks amongt your team.
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+## Technologies
+[Node.js](https://nodejs.org/en/) / [Express](https://expressjs.com/) / [PostgreSQL](https://www.postgresql.org/) / [Mocha](https://mochajs.org/)+[Chai](http://chaijs.com/) testing / [Heroku](https://www.heroku.com/)
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+The ToDueBy API is an Expresss application using Node.js built on a PostgreSQL database
+- Passwords are encrypted with bcryptjs
+- API endpoints are tested with Mocha, Chai
 
-## Scripts
+## API Documentation
+Most endpoints require JWT authentication
+- POST `/api/auth/login` - login (`email` and `password` in req.body)
+- POST `/api/projects/` - creates new project ('name' and 'description' in req.body)
+- GET `/api/projects/` - returns projects user is in
+- GET `/api/projects/:project_id` - returns project info
+- PATCH `/api/projects/:project_id` - updates project info
+- GET `/api/projects/:project_id/tasks` - returns open tasks for project
+- GET `/api/projects/:project_id/members` - returns members in project
+- GET `/api/projects/project/join` - returns projects that user has not joined yet
+- POST `/api/projects/join/:project_id/` - join project 
+- GET `/api/tasks/:task_id` - get task info
+- PATCH `/api/tasks/:task_id` - update task info
+- PATCH `/api/tasks/:task_id/assign` - assign task to a user
+- POST `/api/tasks/:task_id/complete` - complete task
+- POST `/api/tasks/` - creates new task
+- POST `/api/tasks/create` - creates challenge
+- POST `/api/users/` - creates new user
+- POST `/api/users/myopentasks` - returns opens tasks assigned to user
+- POST `/api/users/mycreatedtasks` - returns opens tasks created by user
+- POST `/api/users/mycompletedtasks` - returns tasks completed by user
 
-Start the application `npm start`
+## Screenshots
+#### Dashboard
+<img src="/public/Dashboard.png" width="500" alt="dashboard">
 
-Start nodemon for the application `npm run dev`
-
-Run the tests `npm test`
-
-## Deploying
-
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
-Give the contents a read over and tweak to add your own personal
+#### Project Page
+<img src="/public/ProjectPage.png" width="500" alt="project page">
