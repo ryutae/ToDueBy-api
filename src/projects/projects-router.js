@@ -7,6 +7,7 @@ const path = require('path')
 
 projectsRouter
 .route('/')
+// creates new project 
 .post(requireAuth, jsonBodyParser, (req, res, next) => {
     const { name, description } = req.body
     const newProject = { name, description }
@@ -23,6 +24,7 @@ projectsRouter
     })
     .catch(next)
 })
+// returns projects user is in
 .get(requireAuth, (req, res, next) => {
     const user_id = req.user.id
     ProjectsService.getProjectsForUser(req.app.get('db'), user_id)
@@ -33,15 +35,17 @@ projectsRouter
 })
 
 projectsRouter
-    .route('/:project_id')
-    .all(requireAuth)
-    .all(checkProjectExists)
+.route('/:project_id')
+.all(requireAuth)
+.all(checkProjectExists)
+// returns project info
     .get((req, res) => {
         ProjectsService.getProjectById(req.app.get('db'), req.params.project_id)
         .then(project => {
             res.status(200).json(project)
         })
     })
+// updates project info
     .patch(jsonBodyParser, (req, res, next) => {
         const { name, description } = req.body
         const projectToUpdate = { name, description }
@@ -61,6 +65,7 @@ projectsRouter
         .catch(next)
     })
 
+// returns open tasks for project
 projectsRouter
     .route('/:project_id/tasks/')
     .all(requireAuth)
@@ -73,6 +78,7 @@ projectsRouter
         .catch(next)
     })
 
+// returns members in project
     projectsRouter
     .route('/:project_id/members/')
     .all(requireAuth)
@@ -85,6 +91,7 @@ projectsRouter
         .catch(next)
     })
 
+// returns projects that user has not joined yet
 projectsRouter
     .route('/project/join')
     .all(requireAuth)
@@ -97,6 +104,7 @@ projectsRouter
         .catch(next)
     })
 
+// join project
 projectsRouter
     .route('/join/:project_id')
     .all(requireAuth)

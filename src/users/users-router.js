@@ -5,6 +5,7 @@ const path = require('path')
 const jsonBodyParser = express.json()
 const { requireAuth } = require('../../middleware/jwt-auth')
 
+// creates new user
 usersRouter
     .post('/', jsonBodyParser, (req, res, next) => {
         const { first_name, last_name, email, password } = req.body
@@ -49,6 +50,7 @@ usersRouter
         .catch(next)
     })
 
+// returns opens tasks assigned to user
 usersRouter
     .route('/myopentasks')
     .get(requireAuth, (req, res, next) => {
@@ -60,7 +62,7 @@ usersRouter
         .catch(next)
     })
 
-
+// returns open tasks created by user
     usersRouter
     .route('/mycreatedtasks')
     .get(requireAuth, (req, res, next) => {
@@ -71,7 +73,8 @@ usersRouter
         })
         .catch(next)
     })
-    
+
+// returns tasks completed by user
     usersRouter
     .route('/mycompletedtasks')
     .get(requireAuth, (req, res, next) => {

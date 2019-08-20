@@ -9,6 +9,7 @@ tasksRouter
     .route('/:task_id')
     .all(requireAuth)
     .all(checkTaskExists)
+// get task info
     .get((req, res, next) => {
         TasksService.getTaskById(req.app.get('db'), req.params.task_id)
         .then(task => {
@@ -16,6 +17,7 @@ tasksRouter
         })
         .catch(next)
     })
+// update task info
     .patch(jsonBodyParser, (req, res, next) => {
         const { name, description, due_date, assigned_to } = req.body
         const updatedTask = { name}
@@ -42,6 +44,7 @@ tasksRouter
         .catch(next)
     })
 
+// Assign task to a user
 tasksRouter
     .route('/:task_id/assign')
     .all(requireAuth)
@@ -70,6 +73,7 @@ tasksRouter
         .catch(next)
     })
 
+// creates new task
 tasksRouter
     .route('/')
     .all(requireAuth)
