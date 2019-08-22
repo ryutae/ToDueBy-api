@@ -1,15 +1,17 @@
 # ToDueBy API
 [Live App](https://ryutae-todueby.now.sh)
+[Client Side Repo](https://github.com/ryutae/ToDueBy-client)
 
 ## Summary
 
-ToDueBy is an app that allows you create and join project with your co-workers to create and assign tasks amongt your team.
+ToDueBy is an app that allows you to create and join projects with your co-workers to create and assign tasks amongst your team.
 
 ## Technologies
 [Node.js](https://nodejs.org/en/) / [Express](https://expressjs.com/) / [PostgreSQL](https://www.postgresql.org/) / [Mocha](https://mochajs.org/)+[Chai](http://chaijs.com/) testing / [Heroku](https://www.heroku.com/)
 
-The ToDueBy API is an Expresss application using Node.js built on a PostgreSQL database
+The ToDueBy API is an Expresss application using Node.js built on a PostgreSQL database and deployed on Heroku
 - Passwords are encrypted with bcryptjs
+- Endpoints are authenticated with JWT
 - API endpoints are tested with Mocha, Chai
 
 ## API Documentation
